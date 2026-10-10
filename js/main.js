@@ -247,33 +247,17 @@
   }
 
   /* ---------- intro automática ---------- */
-  var intro = $('#intro'), sndBtn = $('#snd'), done = false;
+  var intro = $('#intro'), done = false;
   function ready() { document.body.classList.add('ready'); }
-  function sndState() {
-    var on = AU.ctx && AU.ctx.state === 'running';
-    sndBtn.classList.toggle('on', !!on); sndBtn.setAttribute('aria-pressed', String(!!on));
-    var sp = $('span', sndBtn);
-    sp.dataset.es = on ? 'Sonido activado' : 'Tocá para activar el sonido';
-    sp.dataset.en = on ? 'Sound on' : 'Tap for sound';
-    sp.textContent = LG ? sp.dataset.en : sp.dataset.es;
-  }
-  function unlock() {
-    var c = AU.ensure(); if (!c) return;
-    var p = c.resume ? c.resume() : null;
-    if (p && p.then) p.then(sndState, sndState); else sndState();
-  }
   function endIntro() {
     if (done) return; done = true;
     try { sessionStorage.setItem('ff-intro', '1'); } catch (e) {}
     d.classList.remove('intro-on'); ready();
-    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.removeEventListener(ev, unlock, true); });
   }
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function runIntro() {
     AU.on = true;
-    AU.ensure();                                   // si el navegador lo permite, ya suena
-    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, unlock, true); });
-    setTimeout(function () { sndState(); sndBtn.classList.add('show'); }, 120);
+    AU.ensure();   // si el navegador permite audio sin interacción, suena; si no, la intro va en silencio
     var ks = $$('.knob', intro), i = 0;
     wait(500).then(function step() {
       if (done) return;
@@ -284,7 +268,6 @@
     });
   }
   if (d.classList.contains('intro-on')) {
-    sndBtn.addEventListener('click', function (e) { e.stopPropagation(); unlock(); });
     $('#skip').addEventListener('click', endIntro);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !done) endIntro(); });
     runIntro();

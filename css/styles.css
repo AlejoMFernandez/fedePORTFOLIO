@@ -216,10 +216,6 @@ footer .row a{text-underline-offset:4px}
 .inm{margin:0;text-align:center;font:800 clamp(28px,4.4vw,46px)/1 var(--f-x);font-variation-settings:"wdth" 66;text-transform:uppercase;color:var(--ink);clip-path:inset(0 100% 0 0);transition:clip-path .65s var(--ease)}
 .inm small{display:block;font:700 12px/1.9 var(--f-c);color:var(--o);letter-spacing:.14em}
 .inm.on{clip-path:inset(0 0 0 0)}
-.snd{display:inline-flex;align-items:center;gap:8px;font:700 12px/1 var(--f-c);text-transform:uppercase;letter-spacing:.04em;background:transparent;color:var(--mut);border:1px solid var(--rule);border-radius:999px;padding:9px 13px;cursor:pointer;opacity:0;transition:opacity .4s}
-.snd.show{opacity:1}
-.snd i{width:8px;height:8px;border-radius:50%;background:var(--mut)}
-.snd.on i{background:var(--o)}
 .skip{position:absolute;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));font:400 12.5px/1 var(--f-c);background:transparent;color:var(--mut);border:1px solid var(--rule);border-radius:999px;padding:9px 13px;cursor:pointer}
 
 /* ---------- responsive ---------- */
