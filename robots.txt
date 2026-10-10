@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://federicofernandez.com.ar/sitemap.xml

@@ -1,0 +1,4 @@
+Poné acá los audios de muestra (mp3, idealmente 128-192 kbps y menos de 1 MB cada uno).
+Después, en js/data.js, completá el campo audio de cada trabajo, por ejemplo:
+  audio: 'audio/mafalda.mp3'
+Si un trabajo tiene audio: null, no se muestra reproductor.
