@@ -41,7 +41,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Courier+Prime:wght@400;700&family=Archivo:wdth,wght@66,800&display=swap">
-<link rel="preload" as="image" href="img/fede-oscuro-720.webp" imagesrcset="img/fede-oscuro-480.webp 480w, img/fede-oscuro-720.webp 720w, img/fede-oscuro-960.webp 960w" imagesizes="(max-width: 820px) 230px, 380px">
+<link rel="preload" as="image" href="img/hero-oscuro-960.webp" imagesrcset="img/hero-oscuro-640.webp 640w, img/hero-oscuro-960.webp 960w, img/hero-oscuro-1254.webp 1254w" imagesizes="(max-width: 820px) 100vw, 42vw">
 <link rel="stylesheet" href="css/styles.css">
 
 <script type="application/ld+json">
@@ -51,7 +51,7 @@
   "name": "Federico Fernández",
   "jobTitle": "Editor y postproductor de audio",
   "url": "https://federicofernandez.com.ar/",
-  "image": "https://federicofernandez.com.ar/img/fede-oscuro-720.webp",
+  "image": "https://federicofernandez.com.ar/img/hero-oscuro-960.webp",
   "email": "mailto:Federicoafernandezs@gmail.com",
   "address": {"@type": "PostalAddress", "addressLocality": "Buenos Aires", "addressCountry": "AR"},
   "knowsLanguage": ["es", "en"],
@@ -73,10 +73,7 @@
       <div class="fd"><i></i></div><div class="mt"></div>
     </div>
     <p class="inm" id="intro-name">Federico Fernández<small>Audio post-production</small></p>
-    <div class="gate" id="gate">
-      <button type="button" class="btn btn-p" data-sound="1" data-en="Enter with sound">Entrar con sonido</button>
-      <button type="button" class="btn" data-sound="0" data-en="Enter without sound">Entrar sin sonido</button>
-    </div>
+    <button type="button" class="snd" id="snd" aria-pressed="false"><i></i><span data-en="Tap for sound">Tocá para activar el sonido</span></button>
   </div>
   <button type="button" class="skip" id="skip" data-en="Skip intro">Saltar intro</button>
 </div>
@@ -108,22 +105,35 @@
 </header>
 
 <main id="top">
-  <section class="wrap hero">
-    <div class="hero-text">
-      <p class="eyebrow rv" data-en="Audio editor &amp; post-production — Buenos Aires">Editor y postproductor de audio — Buenos Aires</p>
-      <h1 class="rv" data-en="&lt;mark&gt;Dialogue editing&lt;/mark&gt;, &lt;mark&gt;sound design&lt;/mark&gt; and &lt;mark&gt;Foley&lt;/mark&gt; for animation, film and series.">Edición de <mark>diálogos</mark>, <mark>diseño sonoro</mark> y <mark>Foley</mark> para animación, cine y series.</h1>
-      <p class="lead rv" data-en="I've worked on productions for Netflix and Discovery through Mundoloco CGI, and on Foley for The Warriors Within 2 with Tauro's Sound.">Trabajé en producciones para Netflix y Discovery a través de Mundoloco CGI, y en Foley para The Warriors Within 2 con Tauro's Sound.</p>
-      <div class="ctas rv">
-        <a class="btn btn-p" href="#trabajos" data-en="Listen to my work">Escuchar trabajos</a>
-        <a class="btn" href="cv/federico-fernandez-cv.pdf" target="_blank" rel="noopener" data-en="Download CV">Descargar CV</a>
+  <section class="hero" id="inicio" aria-labelledby="h-hero">
+    <div class="wrap hero-sheet" aria-hidden="true">
+      <span><b>Cue sheet</b> — Portfolio 2026</span><span data-en="Editor: F. Fernández">Editor: F. Fernández</span><span>Reel 01</span><span>DIA · SFX · FOL · MIX</span>
+    </div>
+    <div class="wrap hero-main">
+      <div class="hero-text">
+        <p class="eyebrow hi" data-en="Audio editor &amp; post-production — Buenos Aires">Editor y postproductor de audio — Buenos Aires</p>
+        <h1 id="h-hero" class="hi" data-en="&lt;mark&gt;Dialogue editing&lt;/mark&gt;, &lt;mark&gt;sound design&lt;/mark&gt; and &lt;mark&gt;Foley&lt;/mark&gt; for animation, film and series.">Edición de <mark>diálogos</mark>, <mark>diseño sonoro</mark> y <mark>Foley</mark> para animación, cine y series.</h1>
+        <p class="lead hi" data-en="I'm Federico Fernández. I've worked on productions for Netflix and Discovery through Mundoloco CGI, and on Foley for The Warriors Within 2 with Tauro's Sound.">Soy Federico Fernández. Trabajé en producciones para Netflix y Discovery a través de Mundoloco CGI, y en Foley para The Warriors Within 2 con Tauro's Sound.</p>
+        <div class="ctas hi">
+          <a class="btn btn-p" href="#trabajos" data-en="Listen to my work">Escuchar trabajos</a>
+          <a class="btn" href="cv/federico-fernandez-cv.pdf" target="_blank" rel="noopener" data-en="Download CV">Descargar CV</a>
+        </div>
+        <dl class="credits hi"><dt data-en="Credits">Créditos</dt><dd>Mafalda · Mini Beat Power Rockers · Underdogs United · The Warriors Within 2</dd></dl>
       </div>
     </div>
-    <figure class="frm rv">
-      <img class="ph ph-d" src="img/fede-oscuro-720.webp" srcset="img/fede-oscuro-480.webp 480w, img/fede-oscuro-720.webp 720w, img/fede-oscuro-960.webp 960w" sizes="(max-width: 820px) 230px, 380px" width="720" height="960" alt="Retrato de Federico Fernández" fetchpriority="high">
-      <img class="ph ph-l" src="img/fede-claro-720.webp" srcset="img/fede-claro-480.webp 480w, img/fede-claro-720.webp 720w, img/fede-claro-960.webp 960w" sizes="(max-width: 820px) 230px, 380px" width="720" height="960" alt="Retrato de Federico Fernández" loading="lazy">
+    <figure class="hero-ph hi">
+      <img class="ph-d" src="img/hero-oscuro-960.webp" srcset="img/hero-oscuro-640.webp 640w, img/hero-oscuro-960.webp 960w, img/hero-oscuro-1254.webp 1254w" sizes="(max-width: 820px) 100vw, 42vw" width="1254" height="1254" alt="Retrato de Federico Fernández" fetchpriority="high">
+      <img class="ph-l" src="img/hero-claro-900.webp" srcset="img/hero-claro-640.webp 640w, img/hero-claro-900.webp 900w, img/hero-claro-1086.webp 1086w" sizes="(max-width: 820px) 100vw, 42vw" width="1086" height="1448" alt="Retrato de Federico Fernández" loading="lazy">
       <span class="note" aria-hidden="true">FF — DIA / SFX / FOL</span>
-      <figcaption class="burn" aria-hidden="true"><span id="tc">TC 01:00:00:00</span><span>V1</span></figcaption>
+      <figcaption class="burn" aria-hidden="true">FF_RETRATO · V1</figcaption>
     </figure>
+    <div class="hero-tl" aria-hidden="false">
+      <div class="wrap">
+        <span class="tc" id="tc" aria-hidden="true">01:00:00:00</span>
+        <div class="ruler" aria-hidden="true"><i></i></div>
+        <a class="scroll" href="#trabajos"><span aria-hidden="true">↓</span><em style="font-style:normal" data-en="Work">Trabajos</em></a>
+      </div>
+    </div>
   </section>
 
   <section class="wrap sec" id="trabajos" aria-labelledby="h-work">

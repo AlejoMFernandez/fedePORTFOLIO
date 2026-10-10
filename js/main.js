@@ -21,7 +21,7 @@
     return AU.ctx;
   };
   AU.tone = function (f, o) {
-    o = o || {}; var c = AU.ensure(); if (!c) return;
+    o = o || {}; var c = AU.ensure(); if (!c || c.state !== 'running') return;
     var osc = c.createOscillator(), g = c.createGain(), t = c.currentTime, dur = o.d || .6;
     osc.type = o.type || 'triangle'; osc.frequency.value = f;
     g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(o.g || .14, t + .015); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
@@ -129,7 +129,7 @@
   /* ---------- reproductor ---------- */
   var player = $('#player'), cur = null, raf = 0, tcEl = $('#tc');
   function fmt(s) { s = Math.max(0, s || 0); var m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ':' + (r < 10 ? '0' : '') + r; }
-  function tc(s) { var p = function (n) { return (n < 10 ? '0' : '') + n; }; return 'TC 01:' + p(Math.floor(s / 60) % 60) + ':' + p(Math.floor(s) % 60) + ':' + p(Math.floor((s % 1) * 25)); }
+  function tc(s) { var p = function (n) { return (n < 10 ? '0' : '') + n; }; return '01:' + p(Math.floor(s / 60) % 60) + ':' + p(Math.floor(s) % 60) + ':' + p(Math.floor((s % 1) * 25)); }
   function tick() {
     if (!cur) return;
     var p = player.duration ? player.currentTime / player.duration : 0;
@@ -236,39 +236,58 @@
   });
   $('#yr').textContent = new Date().getFullYear();
 
-  /* ---------- intro ---------- */
-  var intro = $('#intro'), gate = $('#gate'), done = false;
-  function ready() { d.classList.add('ready-h'); document.body.classList.add('ready'); }
+  /* ---------- timecode del hero (corre solo; con audio, sigue al reproductor) ---------- */
+  var hero = $('.hero'), t0 = performance.now(), heroVis = true;
+  setInterval(function () {
+    if (!heroVis || document.hidden || RM.matches || (cur && !player.paused)) return;
+    tcEl.textContent = tc((performance.now() - t0) / 1000);
+  }, 80);
+  if ('IntersectionObserver' in window && hero) {
+    new IntersectionObserver(function (es) { heroVis = es[0].isIntersecting; hero.classList.toggle('paused', !heroVis); }).observe(hero);
+  }
+
+  /* ---------- intro automática ---------- */
+  var intro = $('#intro'), sndBtn = $('#snd'), done = false;
+  function ready() { document.body.classList.add('ready'); }
+  function sndState() {
+    var on = AU.ctx && AU.ctx.state === 'running';
+    sndBtn.classList.toggle('on', !!on); sndBtn.setAttribute('aria-pressed', String(!!on));
+    var sp = $('span', sndBtn);
+    sp.dataset.es = on ? 'Sonido activado' : 'Tocá para activar el sonido';
+    sp.dataset.en = on ? 'Sound on' : 'Tap for sound';
+    sp.textContent = LG ? sp.dataset.en : sp.dataset.es;
+  }
+  function unlock() {
+    var c = AU.ensure(); if (!c) return;
+    var p = c.resume ? c.resume() : null;
+    if (p && p.then) p.then(sndState, sndState); else sndState();
+  }
   function endIntro() {
     if (done) return; done = true;
     try { sessionStorage.setItem('ff-intro', '1'); } catch (e) {}
     d.classList.remove('intro-on'); ready();
-    var f = $('.brand'); if (f && document.activeElement && intro.contains(document.activeElement)) f.focus({ preventScroll: true });
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.removeEventListener(ev, unlock, true); });
   }
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  function run(sound) {
-    AU.on = !!sound; if (sound) AU.ensure();
-    gate.classList.add('gone');
+  function runIntro() {
+    AU.on = true;
+    AU.ensure();                                   // si el navegador lo permite, ya suena
+    ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, unlock, true); });
+    setTimeout(function () { sndState(); sndBtn.classList.add('show'); }, 120);
     var ks = $$('.knob', intro), i = 0;
-    wait(250).then(function step() {
+    wait(500).then(function step() {
       if (done) return;
-      if (i < 3) { ks[i].style.setProperty('--r', (40 + i * 25) + 'deg'); AU.tone(DOREMI[i], { d: .55 }); i++; return wait(380).then(step); }
-      $('.fd', intro).classList.add('up'); AU.tone(DOREMI[0] * 2, { d: .9, type: 'sine', g: .08 });
-      return wait(320).then(function () {
-        $('.inm', intro).classList.add('on');
-        return wait(1100);
-      }).then(function () {
-        if (done) return;
-        intro.classList.add('out');
-        return wait(780).then(endIntro);
-      });
+      if (i < 3) { ks[i].style.setProperty('--r', (40 + i * 25) + 'deg'); AU.tone(DOREMI[i], { d: .6 }); i++; return wait(420).then(step); }
+      $('.fd', intro).classList.add('up'); AU.tone(DOREMI[0] * 2, { d: 1, type: 'sine', g: .08 });
+      return wait(320).then(function () { $('.inm', intro).classList.add('on'); return wait(1200); })
+        .then(function () { if (done) return; intro.classList.add('out'); return wait(780).then(endIntro); });
     });
   }
   if (d.classList.contains('intro-on')) {
-    $$('button', gate).forEach(function (b) { b.addEventListener('click', function () { run(b.dataset.sound === '1'); }); });
+    sndBtn.addEventListener('click', function (e) { e.stopPropagation(); unlock(); });
     $('#skip').addEventListener('click', endIntro);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !done) endIntro(); });
-    var first = $('button', gate); if (first) first.focus({ preventScroll: true });
+    runIntro();
   } else { ready(); }
 
   /* ---------- arranque ---------- */
